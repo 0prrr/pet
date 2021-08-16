@@ -1,3 +1,17 @@
+# From Me (Not the Author)
+
+Yet another Pet (or I just call it Pet-Enhanced). Since I haven't changed any of the original code, I will not change the name of the tool.
+   
+Much appreciation to `knqyf263` who made Pet.
+
+I personally use it with `glow`, a CLI markdown rendering tool to better format the output. Like this:
+
+![image](https://user-images.githubusercontent.com/28176389/129502096-65807f4f-10cb-4db6-9bae-dc770283ef63.png)
+
+I haven't tested all the markdown syntax, just `header`, `inline code block` and `table`. If markdown went wrong, please checkout the [glow doc](https://github.com/charmbracelet/glow).
+
+Enjoy!
+
 # pet : CLI Snippet Manager
 
 [![GitHub release](https://img.shields.io/github/release/knqyf263/pet.svg)](https://github.com/knqyf263/pet/releases/latest)
