@@ -16,112 +16,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var is_markdown_mode bool
-
 // newCmd represents the new command
 var newCmd = &cobra.Command{
 	Use:   "new COMMAND",
 	Short: "Create a new snippet",
 	Long:  `Create a new snippet (default: $HOME/.config/pet/snippet.toml)`,
 	RunE:  new,
-}
-
-func scan(message string) (string, error) {
-	tempFile := "/tmp/pet.tmp"
-	if runtime.GOOS == "windows" {
-		tempDir := os.Getenv("TEMP")
-		tempFile = filepath.Join(tempDir, "pet.tmp")
-	}
-	l, err := readline.NewEx(&readline.Config{
-		Prompt:          message,
-		HistoryFile:     tempFile,
-		InterruptPrompt: "^C",
-		EOFPrompt:       "exit",
-	})
-	if err != nil {
-		return "", err
-	}
-	defer l.Close()
-
-    var cmds []string
-
-	for {
-		line, err := l.Readline()
-		if err == readline.ErrInterrupt {
-			if len(line) == 0 {
-				break
-			} else {
-				continue
-			}
-		} else if err == io.EOF {
-			break
-		}
-
-		line = strings.TrimSpace(line)
-		if line == "" {
-            continue
-		}
-	if is_markdown_mode {
-	    if line != "eof" && line != "EOF" {
-		line += " \\"
-		cmds = append(cmds, line)
-		l.SetPrompt(color.YellowString("Command> "))
-		continue
-	    }
-	} else {
-	    cmds = append(cmds, line)
-	}
-
-        var finalCmd string
-        if strings.HasPrefix(cmds[0], "#") {
-            finalCmd = strings.Join(cmds, "\n\n")
-        } else {
-            finalCmd = strings.Join(cmds, " ")
-        }
-		return finalCmd, nil
-	}
-	return "", errors.New(color.RedString("canceled..."))
-}
-
-func scan_desc(message string) (string, error) {
-	var desc string = ""
-	tempFile := "/tmp/pet.tmp"
-	if runtime.GOOS == "windows" {
-		tempDir := os.Getenv("TEMP")
-		tempFile = filepath.Join(tempDir, "pet.tmp")
-	}
-	l, err := readline.NewEx(&readline.Config{
-		Prompt:          message,
-		HistoryFile:     tempFile,
-		InterruptPrompt: "^C",
-		EOFPrompt:       "exit",
-	})
-	if err != nil {
-		return "", err
-	}
-	defer l.Close()
-	for {
-		desc, err := l.Readline()
-		if err == readline.ErrInterrupt {
-			if len(desc) == 0 {
-				break
-			} else {
-				continue
-			}
-		} else if err == io.EOF {
-			break
-		}
-
-		desc = strings.TrimSpace(desc)
-
-		if desc == "" {
-			l.SetPrompt(color.GreenString("Description> "))
-			continue
-		}
-
-		return desc, nil
-	}
-	return desc, nil
 }
 
 func scan_mode(message string) (bool, error) {
@@ -168,10 +68,110 @@ func scan_mode(message string) (bool, error) {
 	return false, errors.New(color.RedString("Choose between 'm' and 'n'..."))
 }
 
+func scan_desc(message string) (string, error) {
+	var desc string = ""
+	tempFile := "/tmp/pet.tmp"
+	if runtime.GOOS == "windows" {
+		tempDir := os.Getenv("TEMP")
+		tempFile = filepath.Join(tempDir, "pet.tmp")
+	}
+	l, err := readline.NewEx(&readline.Config{
+		Prompt:          message,
+		HistoryFile:     tempFile,
+		InterruptPrompt: "^C",
+		EOFPrompt:       "exit",
+	})
+	if err != nil {
+		return "", err
+	}
+	defer l.Close()
+	for {
+		desc, err := l.Readline()
+		if err == readline.ErrInterrupt {
+			if len(desc) == 0 {
+				break
+			} else {
+				continue
+			}
+		} else if err == io.EOF {
+			break
+		}
+
+		desc = strings.TrimSpace(desc)
+
+		if desc == "" {
+			l.SetPrompt(color.GreenString("Description> "))
+			continue
+		}
+
+		return desc, nil
+	}
+	return desc, nil
+}
+
+func scan(message string, is_markdown_mode bool) (string, error) {
+	var markdown_mode bool = is_markdown_mode
+	tempFile := "/tmp/pet.tmp"
+	if runtime.GOOS == "windows" {
+		tempDir := os.Getenv("TEMP")
+		tempFile = filepath.Join(tempDir, "pet.tmp")
+	}
+	l, err := readline.NewEx(&readline.Config{
+		Prompt:          message,
+		HistoryFile:     tempFile,
+		InterruptPrompt: "^C",
+		EOFPrompt:       "exit",
+	})
+	if err != nil {
+		return "", err
+	}
+	defer l.Close()
+
+    var cmds []string
+
+	for {
+		line, err := l.Readline()
+		if err == readline.ErrInterrupt {
+			if len(line) == 0 {
+				break
+			} else {
+				continue
+			}
+		} else if err == io.EOF {
+			break
+		}
+
+		line = strings.TrimSpace(line)
+		if line == "" {
+            continue
+		}
+	if markdown_mode {
+	    if line != "eof" && line != "EOF" {
+		line += " \\"
+		cmds = append(cmds, line)
+		l.SetPrompt(color.YellowString("Command> "))
+		continue
+	    }
+	} else {
+	    cmds = append(cmds, line)
+	}
+
+        var finalCmd string
+        if strings.HasPrefix(cmds[0], "#") {
+            finalCmd = strings.Join(cmds, "\n\n")
+        } else {
+            finalCmd = strings.Join(cmds, " ")
+        }
+		return finalCmd, nil
+	}
+	return "", errors.New(color.RedString("canceled..."))
+}
+
 func new(cmd *cobra.Command, args []string) (err error) {
 	var command string
 	var description string
 	var tags []string
+	var is_markdown_mode bool = false
 
 	var snippets snippet.Snippets
 	if err := snippets.Load(); err != nil {
@@ -186,7 +186,7 @@ func new(cmd *cobra.Command, args []string) (err error) {
 		if err != nil {
 			return err
 		}
-		command, err = scan(color.YellowString("Command> "))
+		command, err = scan(color.YellowString("Command> "), is_markdown_mode)
 		if err != nil {
 			return err
 		}
@@ -198,7 +198,7 @@ func new(cmd *cobra.Command, args []string) (err error) {
 
 	if config.Flag.Tag {
 		var t string
-		if t, err = scan(color.CyanString("Tag> ")); err != nil {
+		if t, err = scan(color.CyanString("Tag> "), is_markdown_mode); err != nil {
 			return err
 		}
 		tags = strings.Fields(t)
