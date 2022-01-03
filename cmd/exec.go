@@ -26,7 +26,7 @@ func execute(cmd *cobra.Command, args []string) (err error) {
 		options = append(options, fmt.Sprintf("--query %s", flag.Query))
 	}
 
-	commands, err := filter(options)
+	commands, _, err := filter(options)
 	if err != nil {
 		return err
 	}

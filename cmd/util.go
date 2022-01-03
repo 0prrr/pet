@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"runtime"
 	"strings"
+	"regexp"
 
 	"github.com/fatih/color"
 	"github.com/knqyf263/pet/dialog"
@@ -33,10 +34,10 @@ func run(command string, r io.Reader, w io.Writer) error {
 	return cmd.Run()
 }
 
-func filter(options []string) (commands []string, err error) {
+func filter(options []string) (commands []string, imageUrls []string, err error) {
 	var snippets snippet.Snippets
 	if err := snippets.Load(); err != nil {
-		return commands, fmt.Errorf("Load snippet failed: %v", err)
+		return commands, nil,fmt.Errorf("Load snippet failed: %v", err)
 	}
 
 	snippetTexts := map[string]snippet.SnippetInfo{}
@@ -67,7 +68,7 @@ func filter(options []string) (commands []string, err error) {
 		config.Conf.General.SelectCmd, strings.Join(options, " "))
 	err = run(selectCmd, strings.NewReader(text), &buf)
 	if err != nil {
-		return nil, nil
+		return nil, nil, nil
 	}
 
 	lines := strings.Split(strings.TrimSuffix(buf.String(), "\n"), "\n")
@@ -78,9 +79,10 @@ func filter(options []string) (commands []string, err error) {
 		dialog.CurrentCommand = snippetInfo.Command
 		dialog.GenerateParamsLayout(params, dialog.CurrentCommand)
 		res := []string{dialog.FinalCommand}
-		return res, nil
+		return res, nil, nil
 	}
 
+	var urls []string
 	for _, line := range lines {
 		snippetInfo := snippetTexts[line]
         cmd := snippetInfo.Command
@@ -89,10 +91,18 @@ func filter(options []string) (commands []string, err error) {
 	    if strings.Contains(cmd, "|") {
                 cmd = strings.Replace(cmd, "\n\n", "\n", -1)
             }
+
+	    if strings.Contains(cmd, "img::") {
+		r, _ := regexp.Compile("img([ -~]+)")
+		results := r.FindAllString(cmd, -1)
+		for _, url := range results {
+		    urls = append(urls, strings.Replace(url, "img::", "", -1))
+		}
+	    }
             commands = append(commands, fmt.Sprint(cmd))
         } else {
             commands = append(commands, fmt.Sprint(snippetInfo.Command))
         }
 	}
-	return commands, nil
+	return commands, urls, nil
 }

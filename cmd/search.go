@@ -3,8 +3,9 @@ package cmd
 import (
 	"fmt"
 	"strings"
-    "os"
+        "os"
 	"os/exec"
+	"time"
 
 	"github.com/knqyf263/pet/config"
 	"github.com/spf13/cobra"
@@ -28,7 +29,7 @@ func search(cmd *cobra.Command, args []string) (err error) {
 	if flag.Query != "" {
 		options = append(options, fmt.Sprintf("--query %s", flag.Query))
 	}
-	commands, err := filter(options)
+	commands, imageUrls, err := filter(options)
 	if err != nil {
 		return err
 	}
@@ -45,11 +46,25 @@ func search(cmd *cobra.Command, args []string) (err error) {
         }
         return nil
     }
+
+    if imageUrls != nil {
+	for _, url := range imageUrls {
+	    go func(url string) {
+		var cmd *exec.Cmd
+		cmd = exec.Command("sh", "-c", "proxychains -q curl -s " + url + " | feh -")
+		cmd.Stderr = os.Stderr
+		if err := cmd.Run(); err != nil {
+		    fmt.Println(err)
+		}
+	    }(url)
+	}
+    }
     fmt.Println(finalCommand)
 	if terminal.IsTerminal(1) {
 		fmt.Print("\n")
 	}
 
+	time.Sleep(100 * time.Millisecond)
 	return nil
 }
 

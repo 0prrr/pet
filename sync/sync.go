@@ -57,13 +57,6 @@ func AutoSync(file string) error {
 
 // NewSyncClient returns Client
 func NewSyncClient() (Client, error) {
-	if config.Conf.General.Backend == "gitlab" {
-		client, err := NewGitLabClient()
-		if err != nil {
-			return nil, errors.Wrap(err, "Failed to initialize GitLab client")
-		}
-		return client, nil
-	}
 	client, err := NewGistClient()
 	if err != nil {
 		return nil, errors.Wrap(err, "Failed to initialize Gist client")
