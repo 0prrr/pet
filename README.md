@@ -12,6 +12,8 @@ I haven't tested all the markdown syntax, just `header`, `inline code block` and
 
 Another thing, if you want to put angle brackets (`<>`) in your markdown text, remember to html encode them as `&lt;` and `&gt;` or use backtick to surround the angle bracket"`" when in a table.
 
+Image support added. I personally upload image to imgur, and add in the snippet the keyword `img::` followed by the image link, eg: `img::https://i.imgur.com/V3vsK.png`. And if you have `feh` installed, when you search for that piece of snippet, then `feh` will automatically display the image, which makes my wiki tools more powerful.
+
 Enjoy!
 
 # pet : CLI Snippet Manager
