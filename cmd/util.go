@@ -74,7 +74,7 @@ func filter(options []string) (commands []string, imageUrls []string, err error)
 
 	lines := strings.Split(strings.TrimSuffix(buf.String(), "\n"), "\n")
 
-	if !strings.HasPrefix(command, "#") {
+	if !strings.Contains(lines[0], "#") {
 	    params := dialog.SearchForParams(lines)
 	    if params != nil {
 		snippetInfo := snippetTexts[lines[0]]
@@ -91,9 +91,11 @@ func filter(options []string) (commands []string, imageUrls []string, err error)
         cmd := snippetInfo.Command
         if strings.Contains(cmd, "\\") {
             cmd = strings.Replace(cmd, "\\", "", -1)
-	    if strings.Contains(cmd, "|") {
-                cmd = strings.Replace(cmd, "\n\n", "\n", -1)
-            }
+	    if strings.Contains(cmd, "#") {
+		if strings.Contains(cmd, "|") || strings.Contains(cmd, "```") {
+                    cmd = strings.Replace(cmd, "\n\n", "\n", -1)
+                }
+	    }
 
 	    if strings.Contains(cmd, "img::") {
 		r, _ := regexp.Compile("img([ -~]+)")

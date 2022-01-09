@@ -52,7 +52,7 @@ func scan_mode(message string) (bool, error) {
 			break
 		}
 
-		line = strings.TrimSpace(line)
+		line = strings.TrimRight(line, " ")
 		if line == "" {
 	            l.SetPrompt(color.MagentaString("Mode> "))
 		    continue
@@ -97,7 +97,7 @@ func scan_desc(message string) (string, error) {
 			break
 		}
 
-		desc = strings.TrimSpace(desc)
+		desc = strings.TrimRight(desc, " ")
 
 		if desc == "" {
 			l.SetPrompt(color.GreenString("Description> "))
@@ -141,7 +141,7 @@ func scan(message string, is_markdown_mode bool) (string, error) {
 			break
 		}
 
-		line = strings.TrimSpace(line)
+		line = strings.TrimRight(line, " ")
 		if line == "" {
             continue
 		}
