@@ -42,8 +42,9 @@ func filter(options []string) (commands []string, imageUrls []string, err error)
 
 	snippetTexts := map[string]snippet.SnippetInfo{}
 	var text string
+	var command string
 	for _, s := range snippets.Snippets {
-		command := s.Command
+		command = s.Command
 		if strings.ContainsAny(command, "\n") {
 			command = strings.Replace(command, "\n", "\\n", -1)
 		}
@@ -73,13 +74,15 @@ func filter(options []string) (commands []string, imageUrls []string, err error)
 
 	lines := strings.Split(strings.TrimSuffix(buf.String(), "\n"), "\n")
 
-	params := dialog.SearchForParams(lines)
-	if params != nil {
+	if !strings.HasPrefix(command, "#") {
+	    params := dialog.SearchForParams(lines)
+	    if params != nil {
 		snippetInfo := snippetTexts[lines[0]]
 		dialog.CurrentCommand = snippetInfo.Command
 		dialog.GenerateParamsLayout(params, dialog.CurrentCommand)
 		res := []string{dialog.FinalCommand}
 		return res, nil, nil
+	    }
 	}
 
 	var urls []string
