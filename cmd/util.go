@@ -92,7 +92,7 @@ func filter(options []string) (commands []string, imageUrls []string, err error)
         if strings.Contains(cmd, "\\") {
             cmd = strings.Replace(cmd, "\\", "", -1)
 	    if strings.Contains(cmd, "#") {
-		if strings.Contains(cmd, "|") || strings.Contains(cmd, "```") {
+		if strings.Contains(cmd, "|:-") || strings.Contains(cmd, "|-") || strings.Contains(cmd, "```") {
                     cmd = strings.Replace(cmd, "\n\n", "\n", -1)
                 }
 	    }
