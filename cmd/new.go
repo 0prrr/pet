@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"bufio"
 
 	"github.com/chzyer/readline"
 	"github.com/fatih/color"
@@ -178,9 +179,25 @@ func new(cmd *cobra.Command, args []string) (err error) {
 		return err
 	}
 
-	if len(args) > 0 {
-		command = strings.Join(args, " ")
-		fmt.Fprintf(color.Output, "%s %s\n", color.YellowString("Command>"), command)
+	argsLen := len(args)
+
+	if argsLen == 1 {
+		var cmds []string
+		file, err := os.Open(args[0])
+	        if err != nil {
+		    errors.New(color.RedString("Cannot open file... " + err.Error()))
+		    os.Exit(-1)
+	        }
+		defer file.Close()
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+		    cmds = append(cmds, scanner.Text() + " \\")
+		}
+		if err := scanner.Err(); err != nil {
+		    errors.New(color.RedString("Cannot read file... " + err.Error()))
+		    os.Exit(-1)
+	        }
+		command = strings.Join(cmds, "\n\n")
 	} else {
 		is_markdown_mode, err = scan_mode(color.MagentaString("Mode> "))
 		if err != nil {
