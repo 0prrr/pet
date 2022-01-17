@@ -21,6 +21,14 @@ func editFile(command, file string) error {
 	return run(command, os.Stdin, os.Stdout)
 }
 
+func Reverse(s string) string {
+	runes := []rune(s)
+	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+		runes[i], runes[j] = runes[j], runes[i]
+	}
+	return string(runes)
+}
+
 func run(command string, r io.Reader, w io.Writer) error {
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
@@ -89,13 +97,10 @@ func filter(options []string) (commands []string, imageUrls []string, err error)
 	for _, line := range lines {
 		snippetInfo := snippetTexts[line]
         cmd := snippetInfo.Command
-        if strings.Contains(cmd, "\\") {
-            cmd = strings.Replace(cmd, "\\", "", -1)
-	    if strings.Contains(cmd, "#") {
-		if strings.Contains(cmd, "|:-") || strings.Contains(cmd, "|-") || strings.Contains(cmd, "```") {
-                    cmd = strings.Replace(cmd, "\n\n", "\n", -1)
-                }
-	    }
+        if strings.Contains(cmd, "#") {
+	    if strings.Contains(cmd, "|:-") || strings.Contains(cmd, "|-") || strings.Contains(cmd, "```") {
+                cmd = strings.Replace(cmd, "\n\n", "\n", -1)
+            }
 
 	    if strings.Contains(cmd, "img::") {
 		r, _ := regexp.Compile("img([ -~]+)")

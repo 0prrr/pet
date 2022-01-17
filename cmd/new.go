@@ -148,7 +148,6 @@ func scan(message string, is_markdown_mode bool) (string, error) {
 		}
 	if markdown_mode {
 	    if line != "eof" && line != "EOF" {
-		line += " \\"
 		cmds = append(cmds, line)
 		l.SetPrompt(color.YellowString("Command> "))
 		continue
@@ -191,7 +190,7 @@ func new(cmd *cobra.Command, args []string) (err error) {
 		defer file.Close()
 		scanner := bufio.NewScanner(file)
 		for scanner.Scan() {
-		    cmds = append(cmds, scanner.Text() + " \\")
+		    cmds = append(cmds, scanner.Text())
 		}
 		if err := scanner.Err(); err != nil {
 		    errors.New(color.RedString("Cannot read file... " + err.Error()))
