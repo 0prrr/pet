@@ -31,6 +31,26 @@ go install github.com/charmbracelet/glow@latest
 
 # Usage
 
+## Alias
+
+Put the following scirpt in `.bashrc` or `.zshrc`.
+
+```
+pets () {
+    cmd=`pet search`
+    if [[ "$cmd" == "#"* ]]
+    then
+        echo "$cmd" | glow -s dark - | less -r
+        echo "$cmd" | glow -s dark -
+    else
+        echo "$cmd"
+        echo "$cmd" | tr -d '\n' | clip.exe
+    fi
+}
+```
+
+Use `pets` to run the executable.
+
 ## Sinlge command
 
 ### Save Snippet
