@@ -10,6 +10,24 @@ I haven't tested all the markdown syntax, just `header`, `inline code block` and
 
 Another thing, if you want to put angle brackets (`<>`) in your markdown text, remember to html encode them as `&lt;` and `&gt;` or use backtick to surround the angle bracket"`" when in a table.
 
+# Install
+
+Download the release and extract to whatever place in `PATH`, and issue the command:
+```
+pet
+```
+
+to use.
+
+# Requirements
+
+`Pet` depends on [`glow`](github.com/charmbracelet/glow) to handle markdown syntax. And `feh` to handle images. Install them first.
+
+```
+sudo apt install feh
+go install github.com/charmbracelet/glow@latest
+```
+
 # Support for Images
 Image support added. I personally upload image to imgur, and add in the snippet the keyword `img::` followed by the image link, eg:
 
