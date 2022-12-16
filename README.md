@@ -10,16 +10,25 @@ I haven't tested all the markdown syntax, just `header`, `inline code block` and
 
 Another thing, if you want to put angle brackets (`<>`) in your markdown text, remember to html encode them as `&lt;` and `&gt;` or use backtick to surround the angle bracket"`" when in a table.
 
+# Support for Images
 Image support added. I personally upload image to imgur, and add in the snippet the keyword `img::` followed by the image link, eg:
 
 ```
 img::https://i.imgur.com/V3vsK.png
 ```
 
+* REQUIREMENTS: Install `feh`
+
+```
+sudo apt install feh
+```
+
 And if you have `feh` installed, when you search for that piece of snippet, then `feh` will automatically display the image, which makes my wiki tools more powerful.
 ![2022-01-04 19_48_02-pet_README md at main · reyalpmi_pet](https://user-images.githubusercontent.com/28176389/148054694-b294b7a5-1517-4784-b0d2-0b89457ee9f1.png)
 
-Ability to read markdown content from file is added on Jan, 12th, 2022. Now, for simple markdown snippets, you can fire up pet and input line by line. But for longer snippets with bunch of codes, just put the whole markdown in a file, andissue command
+# Supoort for Files
+
+Ability to read markdown content from file is added on Jan, 12th, 2022. Now, for simple markdown snippets, you can fire up pet and input line by line. But for longer snippets with bunch of codes, just put the whole markdown in a file, and issue command
 
 ```
 pet new /path/to/file
