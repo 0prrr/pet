@@ -41,7 +41,7 @@ go install github.com/charmbracelet/glow@latest
 
 ### Search for Snippet
 
-Text in `<>` is arguments, pet will prompt you for input.
+Texts in `<>` are arguments, pet will prompt you for input.
 
 ![image](https://user-images.githubusercontent.com/28176389/208107108-fa81d9e9-2cdd-49d9-90cd-7295adf86af4.png)
 
