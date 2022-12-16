@@ -49,7 +49,7 @@ pets () {
 }
 ```
 
-Use `pets` to run the executable.
+Use `pets` to run the executable. Replace `clip.exe` to `xclip -sel c` for Linux.
 
 ## Sinlge command
 
