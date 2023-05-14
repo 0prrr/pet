@@ -42,6 +42,7 @@ func run(command string, r io.Reader, w io.Writer) error {
 	return cmd.Run()
 }
 
+// img:: function must be used in markdown texts starting with #
 func filter(options []string) (commands []string, imageUrls []string, err error) {
 	var snippets snippet.Snippets
 	if err := snippets.Load(); err != nil {

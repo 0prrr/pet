@@ -51,7 +51,7 @@ func search(cmd *cobra.Command, args []string) (err error) {
 	for _, url := range imageUrls {
 	    go func(url string) {
 		var cmd *exec.Cmd
-		cmd = exec.Command("sh", "-c", "proxychains -q curl -s " + url + " | feh -")
+		cmd = exec.Command("sh", "-c", "feh " + url)
 		cmd.Stderr = os.Stderr
 		if err := cmd.Run(); err != nil {
 		    fmt.Println(err)
