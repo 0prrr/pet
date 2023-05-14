@@ -181,35 +181,35 @@ Enjoy!
 
 1. Keep Markdown as simple as possible, otherwise `glow` will not display them correctly. The following markdowns have been tested:
 
-```txt
-Header 1: # Title
-Inline code: `command`
-Horizontal Sep: ----------
-Code block: ``` code here ```
-Table:
-|Col1|Col2|
-|----|----|
-|val1|val2|
-```
+   ```txt
+   Header 1: # Title
+   Inline code: `command`
+   Horizontal Sep: ----------
+   Code block: ``` code here ```
+   Table:
+   |Col1|Col2|
+   |----|----|
+   |val1|val2|
+   ```
 
-Example Markdown:
+   Example Markdown:
 
-````txt
-# This Is the Title
+   ````txt
+   # This Is the Title
 
------------
+   -----------
 
-Steps to download file from a URL in command line.
+   Steps to download file from a URL in command line.
 
-1. Open cmd;
-2. Issue the following command:
+   1. Open cmd;
+   2. Issue the following command:
 
-```
-powershell wget https://example.com/fancy.png -o fancy.png
-```
-````
+   ```
+   powershell wget https://example.com/fancy.png -o fancy.png
+   ```
+   ````
 
-Remember, markdown mode snippets always starts with `#` as first character.
+   Remember, markdown mode snippets always starts with `#` as first character.
 
 2. When not in Markdown mode (snippets that starts with #), angle brackets (`<` and `>`) will be interpreted as arguments needed to command, so pet will prompt you for input. This is not cool for saving PHP oneliner. So, either save PHP oneliner as markdown, or just LEAVE OUT the `>` at the end, and add that after pasting the command.
 
