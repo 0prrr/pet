@@ -134,3 +134,11 @@ pet new /path/to/file
 to add the content to pet.
 
 Enjoy!
+
+# License
+
+MIT
+
+# Credit
+
+Again, thanks to Teppei Fukuda (knqyf263) who made Pet Snippet manager. [Original Pet repo](https://github.com/knqyf263/pet)
