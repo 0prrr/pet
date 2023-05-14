@@ -31,7 +31,7 @@ import (
 
 var (
 	configFile string
-	version    = "dev"
+	version    = "v0.9"
 )
 
 // RootCmd represents the base command when called without any subcommands

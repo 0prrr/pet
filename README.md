@@ -8,16 +8,7 @@ I personally use it with `glow`, a CLI markdown rendering tool to better format 
 
 I haven't tested all the markdown syntax, just `header`, `inline code block` and `table`. If markdown went wrong, please checkout the [glow doc](https://github.com/charmbracelet/glow).
 
-Another thing, if you want to put angle brackets (`<>`) in your markdown text, remember to html encode them as `&lt;` and `&gt;` or use backtick to surround the angle bracket"`" when in a table.
-
-# Install
-
-Download the release and extract to whatever place in `PATH`, and issue the command:
-```
-pet
-```
-
-to use.
+NOTE: Please refer to known issues for caveats.
 
 # Requirements
 
@@ -29,15 +20,32 @@ sudo apt install fzf
 go install github.com/charmbracelet/glow@latest
 ```
 
+# Install
+
+You can either build pet from source, or download the pre-compiled binary from release.
+
+## Build from Source
+
+1. Clone the repo to `GOPATH` on your system;
+2. Issue command `go build`;
+3. Move `pet` to `/usr/local/bin/pet`;
+3. Profit!
+
+## Download Pre-compiled Binary
+
+Download the pre-compiled binary and extract to `/usr/local/bin/`;
+
 # Usage
 
-## Alias
+## Shell Function
 
-Put the following scirpt in `.bashrc` or `.zshrc`.
+Put the following scirpt in whatever shell's `.rc` file.
 
-```
+```txt
 pets () {
-    cmd=`pet search`
+    # proxychains can be remove according to the image service you are using
+    # refer to image support in the below section
+    cmd=`proxychains -q /usr/local/bin/pet search`
     if [[ "$cmd" == "#"* ]]
     then
         echo "$cmd" | glow -s dark - | less -r
@@ -49,9 +57,9 @@ pets () {
 }
 ```
 
-Use `pets` to run the executable. Replace `clip.exe` to `xclip -sel c` for Linux.
+Run `source xxx.rc`, then fire up `pets` to run the executable. Replace `clip.exe` (for WSL) to `xclip -sel c` for Linux.
 
-## Sinlge command
+## Use for Sinlge command
 
 ### Save Snippet
 
@@ -71,8 +79,7 @@ Then, you can paste the command for execution.
 
 ![image](https://user-images.githubusercontent.com/28176389/208108345-cd2e5a1c-f1e0-4e2e-b704-378350686e55.png)
 
-
-## Markdown Mode
+## Use for Markdown Mode (Input Line by Line)
 
 ### Save Snippet
 
@@ -86,7 +93,7 @@ Then, you can paste the command for execution.
 
 ![image](https://user-images.githubusercontent.com/28176389/208108146-75d42947-954a-4d16-a6e4-53da9d08a960.png)
 
-## Markdown File
+## Use for Markdown File
 
 ### Save Snippet
 
@@ -100,14 +107,31 @@ Then, you can paste the command for execution.
 
 ![image](https://user-images.githubusercontent.com/28176389/208109049-fc8343c3-ebaa-4ac4-b4b0-cc3cd4119b68.png)
 
-## Saving Image
+## Use for Markdown File with Image
+
+Upload your image to your image service, then copy the URL to the image, save it in pet using the following format:
+
+`img::https://example.com/5Zhdgesz.png`, just like in the screenshot below.
 
 ![image](https://user-images.githubusercontent.com/28176389/208110386-d7d69d66-641e-4c68-a60e-ea2c4e11ffaa.png)
 
+Then save the markdown file with image.
+
 ![image](https://user-images.githubusercontent.com/28176389/208111518-32c140e0-6354-4336-87e4-b03ba7556e58.png)
 
+You can add more than one image to a file, one on each line:
 
-# Support for Images
+```txt
+img::https://exmaple.com/img1.png
+img::https://exmaple.com/img2.png
+```
+
+# Relese Notes
+
+## Latest
+
+### Support for Images
+e
 Image support added. I personally upload image to imgur, and add in the snippet the keyword `img::` followed by the image link, eg:
 
 ```
@@ -123,7 +147,7 @@ sudo apt install feh
 And if you have `feh` installed, when you search for that piece of snippet, then `feh` will automatically display the image, which makes my wiki tools more powerful.
 ![2022-01-04 19_48_02-pet_README md at main · reyalpmi_pet](https://user-images.githubusercontent.com/28176389/148054694-b294b7a5-1517-4784-b0d2-0b89457ee9f1.png)
 
-# Supoort for Files
+### Supoort for Saveing Markdown as File
 
 Ability to read markdown content from file is added on Jan, 12th, 2022. Now, for simple markdown snippets, you can fire up pet and input line by line. But for longer snippets with bunch of codes, just put the whole markdown in a file, and issue command
 
@@ -134,6 +158,46 @@ pet new /path/to/file
 to add the content to pet.
 
 Enjoy!
+
+# Known Issues
+
+1. Keep Markdown as simple as possible, otherwise `glow` will not display them correctly. The following markdowns have been tested:
+
+```txt
+Header 1: # Title
+Inline code: `command`
+Horizontal Sep: ----------
+Code block: ``` code here ```
+Table:
+|Col1|Col2|
+|----|----|
+|val1|val2|
+```
+
+Example Markdown:
+
+```txt
+# This Is the Title
+
+-----------
+
+Steps to download file from a URL in command line.
+
+1. Open cmd;
+2. Issue the following command:
+
+```
+powershell wget https://example.com/fancy.png -o fancy.png
+```
+```
+
+Remember, markdown mode snippets always starts with `#` as first character.
+
+2. When not in Markdown mode (snippets that starts with #), angle brackets will be interpreted as user inputs, so pet will prompt you for input. This is not cool for saving PHP oneliner. So, either save PHP oneliner as markdown, or just LEAVE OUT the `>` at the end, and add that after pasting the command.
+
+# Bug Reports
+
+Feel free to open issue.
 
 # License
 
