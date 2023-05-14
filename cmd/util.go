@@ -98,18 +98,20 @@ func filter(options []string) (commands []string, imageUrls []string, err error)
 	for _, line := range lines {
 		snippetInfo := snippetTexts[line]
         cmd := snippetInfo.Command
+
         if strings.Contains(cmd, "#") {
-	    if strings.Contains(cmd, "|:-") || strings.Contains(cmd, "|-") || strings.Contains(cmd, "```") {
+            if strings.Contains(cmd, "|:-") || strings.Contains(cmd, "|-") || strings.Contains(cmd, "```") {
                 cmd = strings.Replace(cmd, "\n\n", "\n", -1)
             }
 
-	    if strings.Contains(cmd, "img::") {
-		r, _ := regexp.Compile("img([ -~]+)")
-		results := r.FindAllString(cmd, -1)
-		for _, url := range results {
-		    urls = append(urls, strings.Replace(url, "img::", "", -1))
-		}
-	    }
+            if strings.Contains(cmd, "img::") {
+                r, _ := regexp.Compile("img([ -~]+)")
+                results := r.FindAllString(cmd, -1)
+
+                for _, url := range results {
+                    urls = append(urls, strings.Replace(url, "img::", "", -1))
+                }
+            }
             commands = append(commands, fmt.Sprint(cmd))
         } else {
             commands = append(commands, fmt.Sprint(snippetInfo.Command))
