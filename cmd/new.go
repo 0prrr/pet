@@ -113,7 +113,8 @@ func scan_desc(message string) (string, error) {
 func scan(message string, is_markdown_mode bool) (string, error) {
 	var markdown_mode bool = is_markdown_mode
 	tempFile := "/tmp/pet.tmp"
-	if runtime.GOOS == "windows" {
+    go_os := runtime.GOOS
+	if go_os == "windows" {
 		tempDir := os.Getenv("TEMP")
 		tempFile = filepath.Join(tempDir, "pet.tmp")
 	}
@@ -161,6 +162,9 @@ func scan(message string, is_markdown_mode bool) (string, error) {
             finalCmd = strings.Join(cmds, "\n\n")
         } else {
             finalCmd = strings.Join(cmds, " ")
+            if go_os == "linux" {
+                finalCmd = strings.Replace(finalCmd, "\\", "\\\\", -1)
+            }
         }
 		return finalCmd, nil
 	}
