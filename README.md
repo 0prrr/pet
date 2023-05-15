@@ -1,3 +1,301 @@
+# 中文 README （For English service, please scroll down）
+
+命令行代码片段管理工具。感谢 `knqyf263` 制作的原 Pet 工具. [原工具仓库](https://github.com/knqyf263/pet)
+
+增加了 Markdown 功能，图片功能。
+
+整个程序只有一个 snippet.toml 文件，一个 config.toml 文件（默认生成在 /home/$USER/.config/pet/）需要保存（直接开一个 github 私有仓库同步即可）。
+
+保存命令或者 Markdown 文字，增加关键字；需要使用的时候，通过关键字搜索（fzf）即可。
+
+目的在于提高效率，无需离开命令行，配合 tmux，无缝获取需要的命令或者信息。
+
+# 依赖
+
+Pet 需要依赖 `glow` 来在命令行显示 Markdown。需要 `feh` 来显示图片，并需要 `fzf` 做模糊搜索。
+
+```
+sudo apt install fzf feh
+go install github.com/charmbracelet/glow@latest
+```
+
+详情见安装章节。
+
+# 安装
+
+从源码编译，或者下载编译好的文件。
+
+## 编译
+
+### Linux / Windows WSL
+
+1. 安装依赖
+   ```txt
+   sudo apt install fzf feh proxychains4
+   go install github.com/charmbracelet/glow@latest
+   ```
+
+2. 克隆仓库到 GOPATH；
+   ```txt
+   git clone https://github.com/0prrr/pet.git
+   ```
+
+3. 编译
+   ```txt
+   cd pet
+   
+   go build
+   ```
+   
+4. 将 `pet` 二进制移到 `/usr/local/bin/`
+   ```txt
+   mv pet /usr/local/bin
+   ```
+   
+5. 查看下文使用方式（增加 Alias），粘贴适用的代码到 shell `.rc` 文件;
+
+### macOS
+
+1. 安装依赖
+   ```txt
+   brew install fzf feh xorg-server xinit
+   
+   go install github.com/charmbracelet/glow@latest
+   
+   // Optional
+   brew install proxychains-ng
+   ```
+   
+2. 克隆仓库到 GOPATH；
+   ```txt
+   git clone https://github.com/0prrr/pet.git
+   ```
+   
+3. 编译
+   ```txt
+   cd pet
+   
+   go build
+   ```
+   
+4. 将 `pet` 二进制移到 `/usr/local/bin/`
+   ```txt
+   mv pet /usr/local/bin
+   ```
+
+5. 查看下文使用方式（增加 Alias），粘贴适用的代码到 shell `.rc` 文件;
+
+
+## 下载预编译的二进制文件
+
+下载相应平台最新版本（v0.9），解压到 `/usr/local/bin/` 即可。
+
+# 使用方式
+
+## 增加 Alias
+
+Linux, 粘贴下面的代码到 shell 的 `.rc` 文件。
+
+```txt
+pets () {
+    # proxychains 是因为我使用 Imgur 保存我的图片
+    # 更多关于图片的支持看下文的图片支持章节
+    cmd=`proxychains -q /usr/local/bin/pet search`
+    if [[ "$cmd" == "#"* ]]
+    then
+        echo "$cmd" | glow -s dark - | less -r
+        echo "$cmd" | glow -s dark -
+    else
+        echo "$cmd"
+        echo "$cmd" | tr -d '\n' | xclip -sel c
+    fi
+}
+```
+
+Windows WSL, 粘贴下面的代码到 shell 的 `.rc` 文件。
+
+```txt
+pets () {
+    # proxychains 是因为我使用 Imgur 保存我的图片
+    # 更多关于图片的支持看下文的图片支持章节
+    cmd=`proxychains -q /usr/local/bin/pet search`
+    if [[ "$cmd" == "#"* ]]
+    then
+        echo "$cmd" | glow -s dark - | less -r
+        echo "$cmd" | glow -s dark -
+    else
+        echo "$cmd"
+        echo "$cmd" | tr -d '\n' | clip.exe
+    fi
+}
+```
+
+macOS, 粘贴下面的代码到 shell 的 `.rc` 文件。
+
+```txt
+export DISPLAY=:0.0
+
+if ! pgrep -x "xquartz" >/dev/null; then
+    xquartz &
+fi
+
+pets () {
+    # proxychains can be removed according to the image service you are using
+    # refer to image support in the below section
+    cmd=`proxychains -q /usr/local/bin/pet search`
+    if [[ "$cmd" == "#"* ]]
+    then
+        echo "$cmd" | glow -s dark - | less -r
+        echo "$cmd" | glow -s dark -
+    else
+        echo "$cmd"
+        echo "$cmd" | tr -d '\n' | pbcopy
+    fi
+}
+```
+
+运行 `source xxx.rc`, 然后使用 `pets` 运行。
+
+## 单行命令
+
+### 保存单行命令
+
+`n` 代表 `normal` 模式.
+
+![image](https://user-images.githubusercontent.com/28176389/208106824-b7ff653e-9642-411a-a2d0-aace7b278d14.png)
+
+### 搜索命令
+
+运行 `pets`, 输入关键字，回车。
+
+![image](https://user-images.githubusercontent.com/28176389/208107108-fa81d9e9-2cdd-49d9-90cd-7295adf86af4.png)
+
+ 注意 `<>` 是参数, pet 会要求你填入，填入参数后回车。
+
+![image](https://user-images.githubusercontent.com/28176389/208107357-ef61740c-b8ce-4268-8ee6-1679e882175c.png)
+
+命令显示在命令行，并已经复制到剪切板，粘贴运行即可。
+
+![image](https://user-images.githubusercontent.com/28176389/208108345-cd2e5a1c-f1e0-4e2e-b704-378350686e55.png)
+
+## Markdown 单行模式
+
+### 保存代码片段
+
+`m` 代表 `markdown` 模式. `eof` 代表输入结束。
+
+![image](https://user-images.githubusercontent.com/28176389/208107945-a7d8c09d-e306-445a-91a2-6d21b66f9254.png)
+
+### 搜索代码片段
+
+运行 `pets`, 输入关键字，回车。
+
+![image](https://user-images.githubusercontent.com/28176389/208108100-0c75e346-725f-453d-b561-8c0be9a0839c.png)
+
+`glow` 会将代码片段显示在命令行。
+
+![image](https://user-images.githubusercontent.com/28176389/208108146-75d42947-954a-4d16-a6e4-53da9d08a960.png)
+
+## Markdown 文件
+
+### 保存代码片段
+
+在文件中输入 Markdown 内容，保存。
+
+![image](https://user-images.githubusercontent.com/28176389/208108800-ccf45361-cfef-446d-9260-b08e0e036840.png)
+
+使用 `pet new /path/to/file` 保存文件中的内容。优点是随时修改。
+
+![image](https://user-images.githubusercontent.com/28176389/208108916-22caa6d5-87b5-471f-a763-a9a6de720a30.png)
+
+### 搜索代码片段
+
+运行 `pets`, 输入关键字，回车。
+
+![image](https://user-images.githubusercontent.com/28176389/208109016-1534737f-de61-4885-9419-ecbb7a1338d4.png)
+
+`glow` 会将代码片段显示在命令行
+
+![image](https://user-images.githubusercontent.com/28176389/208109049-fc8343c3-ebaa-4ac4-b4b0-cc3cd4119b68.png)
+
+## 带图片的 Markdown 文件
+
+截图软件都带上传插件。上传截图到图片服务（如 Imgur），然后以如下格式保存图片链接：
+
+`img::https://example.com/5Zhdgesz.png`
+
+如下图
+
+![image](https://user-images.githubusercontent.com/28176389/208110386-d7d69d66-641e-4c68-a60e-ea2c4e11ffaa.png)
+
+然后保存该 Markdown 文件。
+
+![image](https://user-images.githubusercontent.com/28176389/208111518-32c140e0-6354-4336-87e4-b03ba7556e58.png)
+
+可以添加任意数量的图片，一张一行即可。
+
+```txt
+img::https://exmaple.com/img1.png
+img::https://exmaple.com/img2.png
+```
+
+# 已知问题
+
+1. 使用简单的 Markdown（如下例子），否则 `glow` 可能会显示不正常。以下 Markdown 语法已经过测试。
+
+   ```txt
+   Header 1: # Title
+   Inline code: `command`
+   Horizontal Sep: ----------
+   Code block: ``` code here ```
+   Table:
+   |Col1|Col2|
+   |----|----|
+   |val1|val2|
+   ```
+
+   Markdown 示例：
+
+   ````txt
+   # This Is the Title
+
+   -----------
+
+   Steps to download file from a URL in command line.
+
+   1. Open cmd;
+   2. Issue the following command:
+
+   ```
+   powershell wget https://example.com/fancy.png -o fancy.png
+   ```
+   ````
+
+   Markdown 代码片段都以 `#` 开头（第一行第一个字符）。
+
+2. 非 Markdown 模式下（单行命令模式），尖括 (`<` and `>`) 会被解析成参数，pet 会弹出输入框。这对于 PHP 单行命令并不友好。目前的解决方式是，保存 PHP 单行命令成 Markdown，或者在保存单行命令的时候，省略右括号（`>`），在使用的时候添上。
+
+3. 在参数输入框页面，避免粘贴过长的参数。整个库有些问题，过长的文字格式会出错。建议在粘贴命令之后自行添加。
+
+4. 由于支持 Markdown，所以在 Markdown 模式下，pet 不能自作主张转义所有的反斜杠，否则会导致该有的缩进无法正常显示，代码格式混乱。所以，反斜杠需要用户自行转义。比如路径：`C:\Windows\System32`, 转译成：`C:\\Windows\\System32`; 代码也一样: `printf("Value is: %d\n", val);`, 转译成: `printf("Value is: %d\\n", val);`. VIM 中, 可以使用整个命令做全局替换 `%s/\\/\\\\/g`. 其他编辑器，只需将 `\` 替换成 `\\` 即可。（！！！注意，`normal` 模式下，不需要转义！！！）
+
+5. 由于 feh 依赖 X11，所以在 mac 必须使用 xquartz 来解决 feh 的运行问题。目前还没有计划使用其他的方式代替 feh。Again, bear with me。
+
+# Bug 上报
+
+欢迎 issue。
+
+# 协议
+
+MIT
+
+# 致谢
+
+感谢 Teppei Fukuda (knqyf263) 制作的 Pet Snippet manager. [原仓库](https://github.com/knqyf263/pet)
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
 Yet another Pet (or I just call it Pet-Enhanced). Since I haven't changed any of the original code, I will not change the name of the tool.
    
 Much appreciation to `knqyf263` who made Pet. [Original Pet repo](https://github.com/knqyf263/pet)
@@ -17,8 +315,7 @@ NOTE: Please refer to known issues for caveats.
 `Pet` depends on [`glow`](github.com/charmbracelet/glow) to handle markdown syntax. And `feh` to handle images. Install them first. The default search program is `fzf`.
 
 ```
-sudo apt install feh
-sudo apt install fzf
+sudo apt install fzf feh
 go install github.com/charmbracelet/glow@latest
 ```
 
@@ -28,10 +325,62 @@ You can either build pet from source, or download the pre-compiled binary from r
 
 ## Build from Source
 
-1. Clone the repo to `GOPATH` on your system;
-2. Issue command `go build`;
-3. Move `pet` to `/usr/local/bin/pet`;
-3. Profit!
+### Linux / Windows WSL
+
+1. Install dependencies
+   ```txt
+   sudo apt install fzf feh
+   
+   go install github.com/charmbracelet/glow@latest
+   ```
+
+2. Clone the repo to `GOPATH` on your system
+   ```txt
+   git clone https://github.com/0prrr/pet.git
+   ```
+
+3. Compile
+   ```txt
+   go build
+   ```
+
+4. Move `pet` to `/usr/local/bin/pet`
+   ```txt
+   mv pet /usr/local/bin
+   ```
+
+5. Refer to Shell Function section next and add appropriate code to shell's `.rc` file;
+
+### macOS
+
+1. Install dependencies
+   ```txt
+   brew install fzf feh xorg-server xinit
+   
+   go install github.com/charmbracelet/glow@latest
+   
+   // Optional
+   brew install proxychains-ng
+   ```
+
+2. Clone the repo to `GOPATH` on your system
+   ```txt
+   git clone https://github.com/0prrr/pet.git
+   ```
+   
+3. Compile
+   ```txt
+   cd pet
+   
+   go build
+   ```
+   
+4. Move `pet` to `/usr/local/bin/`
+   ```txt
+   mv pet /usr/local/bin
+   ```
+   
+5. Refer to Shell Function section next and add appropriate code to shell's `.rc` file;
 
 ## Download Pre-compiled Binary
 
@@ -41,11 +390,29 @@ Download the pre-compiled binary and extract to `/usr/local/bin/`;
 
 ## Shell Function
 
-Put the following scirpt in whatever shell's `.rc` file.
+For Linux, put the following scirpt in whatever shell's `.rc` file.
 
 ```txt
 pets () {
-    # proxychains can be remove according to the image service you are using
+    # proxychains 是因为我使用 Imgur 保存我的图片
+    # 更多关于图片的支持看下文的图片支持章节
+    cmd=`proxychains -q /usr/local/bin/pet search`
+    if [[ "$cmd" == "#"* ]]
+    then
+        echo "$cmd" | glow -s dark - | less -r
+        echo "$cmd" | glow -s dark -
+    else
+        echo "$cmd"
+        echo "$cmd" | tr -d '\n' | xclip -sel c
+    fi
+}
+```
+
+For Windows WSL, put the following scirpt in whatever shell's `.rc` file.
+
+```txt
+pets () {
+    # proxychains can be removed according to the image service you are using
     # refer to image support in the below section
     cmd=`proxychains -q /usr/local/bin/pet search`
     if [[ "$cmd" == "#"* ]]
@@ -59,7 +426,31 @@ pets () {
 }
 ```
 
-Run `source xxx.rc`, then fire up `pets` to run the executable. Replace `clip.exe` (for WSL) to `xclip -sel c` for Linux.
+For macOS, put the following scirpt in whatever shell's `.rc` file.
+
+```txt
+export DISPLAY=:0.0
+
+if ! pgrep -x "xquartz" >/dev/null; then
+    xquartz &
+fi
+
+pets () {
+    # proxychains can be removed according to the image service you are using
+    # refer to image support in the below section
+    cmd=`proxychains -q /usr/local/bin/pet search`
+    if [[ "$cmd" == "#"* ]]
+    then
+        echo "$cmd" | glow -s dark - | less -r
+        echo "$cmd" | glow -s dark -
+    else
+        echo "$cmd"
+        echo "$cmd" | tr -d '\n' | pbcopy
+    fi
+}
+```
+
+Run `source xxx.rc`, then fire up `pets` to run the executable.
 
 ## Use for Sinlge command
 
@@ -214,6 +605,10 @@ Enjoy!
 2. When not in Markdown mode (snippets that starts with #), angle brackets (`<` and `>`) will be interpreted as arguments needed to command, so pet will prompt you for input. This is not cool for saving PHP oneliner. So, either save PHP oneliner as markdown, or just LEAVE OUT the `>` at the end, and add that after pasting the command.
 
 3. When prompted for argument, try not to paste in very long text, the text will get messed up somehow. You can try for yourself. This is not going to be fixed in a while, so, bear with me.
+
+4. Because of Markdown support, pet cannot decide to escape all backslashes there in the command/snippets, because that will mess up with code formats. PLEASE escape backslash (double them) manually. Like if you're saving path: `C:\Windows\System32`, escape them as: `C:\\Windows\\System32`; for code, same: `printf("Value is: %d\n", val);`, escape as: `printf("Value is: %d\\n", val);`. If you're using vim, `%s/\\/\\\\/g` will do. Other text editors, just replace `\` with `\\`.（!!! Note that no escaping should be done under `normal` mode !!!）
+
+5. feh (I'm old) replies on X11 to function. So on macOS, it must be solved with xquartz. feh won't be replaced in anticipated future. Again, bear with me.
 
 # Bug Reports
 
