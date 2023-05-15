@@ -150,7 +150,9 @@ func new(cmd *cobra.Command, args []string) (err error) {
 		for scanner.Scan() {
             if go_os == "linux" {
                 cmds = append(cmds, strings.Replace(scanner.Text(), "\\", "\\\\", -1))
-            }       
+            } else {
+                cmds = append(cmds, scanner.Text())
+            }
 		}
 
 		if err := scanner.Err(); err != nil {
