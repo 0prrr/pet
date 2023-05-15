@@ -68,7 +68,8 @@ func scan_desc(message string) (string, error) {
 
 func scan(message string) (string, error) {
 	tempFile := "/tmp/pet.tmp"
-	if runtime.GOOS == "windows" {
+    go_os := runtime.GOOS
+	if go_os == "windows" {
 		tempDir := os.Getenv("TEMP")
 		tempFile = filepath.Join(tempDir, "pet.tmp")
 	}
@@ -98,7 +99,10 @@ func scan(message string) (string, error) {
 		}
 
 		line = strings.TrimRight(line, " ")
-        line = strings.Replace(line, "\\", "\\\\", -1)
+        
+        if go_os == "linux" {
+            line = strings.Replace(line, "\\", "\\\\", -1)
+        }
 
 		if line == "" {
             continue
@@ -143,7 +147,9 @@ func new(cmd *cobra.Command, args []string) (err error) {
 		scanner := bufio.NewScanner(file)
 
 		for scanner.Scan() {
-		    cmds = append(cmds, strings.Replace(scanner.Text(), "\\", "\\\\", -1))
+            if go_os == "linux" {
+                cmds = append(cmds, strings.Replace(scanner.Text(), "\\", "\\\\", -1))
+            }       
 		}
 
 		if err := scanner.Err(); err != nil {
