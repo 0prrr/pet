@@ -4,7 +4,7 @@
 
 增加了 Markdown 功能，图片功能。
 
-整个程序只有一个 snippet.toml 文件，一个 config.toml 文件（默认生成在 /home/$USER/.config/pet/）需要保存（直接开一个 github 私有仓库同步即可）。
+整个程序只有一个 snippet.toml 文件，一个 config.toml 文件（默认生成在 /home/$USER/.config/pet/）需要保存（直接开一个 github 私有仓库同步即可）。Shell 里面增加一个 alias，`alias whatever="pushd ~/.config/pet >/dev/null;git pull;git add *;git commit -m 'new snippet';git push;popd >/dev/null"`。
 
 保存命令或者 Markdown 文字，增加关键字；需要使用的时候，通过关键字搜索（fzf）即可。
 
@@ -299,6 +299,8 @@ Yet another Pet (or I just call it Pet-Enhanced). Since I haven't changed any of
 Much appreciation to `knqyf263` who made Pet. [Original Pet repo](https://github.com/knqyf263/pet)
 
 It's a little command snippet management tool which can be used as a quick reference to concepts and commands in case you forgot. Pretty handy.
+
+All we need to save is two toml files located in `~/.config/pet`. So, open a github repo, make an alias, `alias whatever="pushd ~/.config/pet >/dev/null;git pull;git add *;git commit -m 'new snippet';git push;popd >/dev/null"` will suffice.
 
 I added markdown support to the tool and personally use it with `glow`, a CLI markdown rendering tool to better format the output. Like this:
 
