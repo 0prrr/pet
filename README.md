@@ -178,24 +178,6 @@ pets () {
 
 ![image](https://user-images.githubusercontent.com/28176389/208108345-cd2e5a1c-f1e0-4e2e-b704-378350686e55.png)
 
-## Markdown 单行模式
-
-### 保存代码片段
-
-`m` 代表 `markdown` 模式. `eof` 代表输入结束。
-
-![image](https://user-images.githubusercontent.com/28176389/208107945-a7d8c09d-e306-445a-91a2-6d21b66f9254.png)
-
-### 搜索代码片段
-
-运行 `pets`, 输入关键字，回车。
-
-![image](https://user-images.githubusercontent.com/28176389/208108100-0c75e346-725f-453d-b561-8c0be9a0839c.png)
-
-`glow` 会将代码片段显示在命令行。
-
-![image](https://user-images.githubusercontent.com/28176389/208108146-75d42947-954a-4d16-a6e4-53da9d08a960.png)
-
 ## Markdown 文件
 
 ### 保存代码片段
@@ -273,7 +255,7 @@ img::https://exmaple.com/img2.png
 
    Markdown 代码片段都以 `#` 开头（第一行第一个字符）。
 
-2. 非 Markdown 模式下（单行命令模式），尖括 (`<` and `>`) 会被解析成参数，pet 会弹出输入框。这对于 PHP 单行命令并不友好。目前的解决方式是，保存 PHP 单行命令成 Markdown，或者在保存单行命令的时候，省略右括号（`>`），在使用的时候添上。
+2. 单行命令中，尖括 (`<` and `>`) 会被解析成参数，pet 会弹出输入框。这对于 PHP 单行命令并不友好。目前的解决方式是，保存 PHP 单行命令成 Markdown，或者在保存单行命令的时候，省略右括号（`>`），在使用的时候添上。
 
 3. 在参数输入框页面，避免粘贴过长的参数。整个库有些问题，过长的文字格式会出错。建议在粘贴命令之后自行添加。
 
@@ -474,24 +456,6 @@ Now, the command is in your clipboard, you can paste the command for execution.
 
 ![image](https://user-images.githubusercontent.com/28176389/208108345-cd2e5a1c-f1e0-4e2e-b704-378350686e55.png)
 
-## Use for Markdown Mode (Input Line by Line)
-
-### Save Snippet
-
-`m` for `markdown` mode. `eof` exits input and start description.
-
-![image](https://user-images.githubusercontent.com/28176389/208107945-a7d8c09d-e306-445a-91a2-6d21b66f9254.png)
-
-### Search for Snippet
-
-Issue command `pets`, enter keywords to search for your snippet, locate the target snippet, then press `Enter`.
-
-![image](https://user-images.githubusercontent.com/28176389/208108100-0c75e346-725f-453d-b561-8c0be9a0839c.png)
-
-The snippet will be displayed by `glow` in terminal.
-
-![image](https://user-images.githubusercontent.com/28176389/208108146-75d42947-954a-4d16-a6e4-53da9d08a960.png)
-
 ## Use for Markdown File
 
 ### Save Snippet
@@ -602,7 +566,7 @@ Enjoy!
 
    Remember, markdown mode snippets always starts with `#` as first character.
 
-2. When not in Markdown mode (snippets that starts with #), angle brackets (`<` and `>`) will be interpreted as arguments needed to command, so pet will prompt you for input. This is not cool for saving PHP oneliner. So, either save PHP oneliner as markdown, or just LEAVE OUT the `>` at the end, and add that after pasting the command.
+2. When saving single-line command, angle brackets (`<` and `>`) will be interpreted as arguments needed to command, so pet will prompt you for input. This is not cool for saving PHP oneliner. So, either save PHP oneliner as markdown, or just LEAVE OUT the `>` at the end, and add that after pasting the command.
 
 3. When prompted for argument, try not to paste in very long text, the text will get messed up somehow. You can try for yourself. This is not going to be fixed in a while, so, bear with me.
 
