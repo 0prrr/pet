@@ -127,6 +127,7 @@ func new(cmd *cobra.Command, args []string) (err error) {
 	var command string
 	var description string
 	var tags []string
+    go_os := runtime.GOOS
 
 	var snippets snippet.Snippets
 	if err := snippets.Load(); err != nil {
