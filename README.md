@@ -277,9 +277,7 @@ img::https://exmaple.com/img2.png
 
 3. 在参数输入框页面，避免粘贴过长的参数。整个库有些问题，过长的文字格式会出错。建议在粘贴命令之后自行添加。
 
-4. 由于支持 Markdown，所以在 Markdown 模式下，pet 不能自作主张转义所有的反斜杠，否则会导致该有的缩进无法正常显示，代码格式混乱。所以，反斜杠需要用户自行转义。比如路径：`C:\Windows\System32`, 转译成：`C:\\Windows\\System32`; 代码也一样: `printf("Value is: %d\n", val);`, 转译成: `printf("Value is: %d\\n", val);`. VIM 中, 可以使用整个命令做全局替换 `%s/\\/\\\\/g`. 其他编辑器，只需将 `\` 替换成 `\\` 即可。（！！！注意，`normal` 模式下，不需要转义！！！）
-
-5. 由于 feh 依赖 X11，所以在 mac 必须使用 xquartz 来解决 feh 的运行问题。目前还没有计划使用其他的方式代替 feh。Again, bear with me。
+4. 由于 feh 依赖 X11，所以在 mac 必须使用 xquartz 来解决 feh 的运行问题。目前还没有计划使用其他的方式代替 feh。Again, bear with me。
 
 # Bug 上报
 
@@ -606,9 +604,7 @@ Enjoy!
 
 3. When prompted for argument, try not to paste in very long text, the text will get messed up somehow. You can try for yourself. This is not going to be fixed in a while, so, bear with me.
 
-4. Because of Markdown support, pet cannot decide to escape all backslashes there in the command/snippets, because that will mess up with code formats. PLEASE escape backslash (double them) manually. Like if you're saving path: `C:\Windows\System32`, escape them as: `C:\\Windows\\System32`; for code, same: `printf("Value is: %d\n", val);`, escape as: `printf("Value is: %d\\n", val);`. If you're using vim, `%s/\\/\\\\/g` will do. Other text editors, just replace `\` with `\\`.（!!! Note that no escaping should be done under `normal` mode !!!）
-
-5. feh (I'm old) replies on X11 to function. So on macOS, it must be solved with xquartz. feh won't be replaced in anticipated future. Again, bear with me.
+4. feh (I'm old) replies on X11 to function. So on macOS, it must be solved with xquartz. feh won't be replaced in anticipated future. Again, bear with me.
 
 # Bug Reports
 

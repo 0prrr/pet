@@ -113,8 +113,7 @@ func scan_desc(message string) (string, error) {
 func scan(message string, is_markdown_mode bool) (string, error) {
 	var markdown_mode bool = is_markdown_mode
 	tempFile := "/tmp/pet.tmp"
-    go_os := runtime.GOOS
-	if go_os == "windows" {
+	if runtime.GOOS == "windows" {
 		tempDir := os.Getenv("TEMP")
 		tempFile = filepath.Join(tempDir, "pet.tmp")
 	}
@@ -144,30 +143,32 @@ func scan(message string, is_markdown_mode bool) (string, error) {
 		}
 
 		line = strings.TrimRight(line, " ")
+        line = strings.Replace(line, "\\", "\\\\", -1)
+
 		if line == "" {
             continue
 		}
-	if markdown_mode {
-	    if line != "eof" && line != "EOF" {
-		cmds = append(cmds, line)
-		l.SetPrompt(color.YellowString("Command> "))
-		continue
-	    }
-	} else {
-	    cmds = append(cmds, line)
-	}
+
+        if markdown_mode {
+            if line != "eof" && line != "EOF" {
+            cmds = append(cmds, line)
+            l.SetPrompt(color.YellowString("Command> "))
+            continue
+            }
+        } else {
+            cmds = append(cmds, line)
+        }
 
         var finalCmd string
+
         if strings.HasPrefix(cmds[0], "#") {
             finalCmd = strings.Join(cmds, "\n\n")
         } else {
             finalCmd = strings.Join(cmds, " ")
-            if go_os == "linux" {
-                finalCmd = strings.Replace(finalCmd, "\\", "\\\\", -1)
-            }
         }
 		return finalCmd, nil
 	}
+
 	return "", errors.New(color.RedString("canceled..."))
 }
 
@@ -192,14 +193,18 @@ func new(cmd *cobra.Command, args []string) (err error) {
 		    os.Exit(-1)
 	        }
 		defer file.Close()
+
 		scanner := bufio.NewScanner(file)
+
 		for scanner.Scan() {
-		    cmds = append(cmds, scanner.Text())
+		    cmds = append(cmds, strings.Replace(scanner.Text(), "\\", "\\\\", -1))
 		}
+
 		if err := scanner.Err(); err != nil {
 		    errors.New(color.RedString("Cannot read file... " + err.Error()))
 		    os.Exit(-1)
-	        }
+        }
+
 		command = strings.Join(cmds, "\n\n")
 	} else {
 		is_markdown_mode, err = scan_mode(color.MagentaString("Mode> "))
