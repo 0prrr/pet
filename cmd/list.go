@@ -17,10 +17,6 @@ const (
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: "Show all snippets",
-	Long:  `Show all snippets`,
-	RunE:  list,
 }
 
 func list(cmd *cobra.Command, args []string) error {

@@ -25,50 +25,6 @@ var newCmd = &cobra.Command{
 	RunE:  new,
 }
 
-func scan_mode(message string) (bool, error) {
-	tempFile := "/tmp/pet.tmp"
-	if runtime.GOOS == "windows" {
-		tempDir := os.Getenv("TEMP")
-		tempFile = filepath.Join(tempDir, "pet.tmp")
-	}
-	l, err := readline.NewEx(&readline.Config{
-		Prompt:          message,
-		HistoryFile:     tempFile,
-		InterruptPrompt: "^C",
-		EOFPrompt:       "exit",
-	})
-	if err != nil {
-		return false, err
-	}
-	defer l.Close()
-	for {
-		line, err := l.Readline()
-		if err == readline.ErrInterrupt {
-			if len(line) == 0 {
-				break
-			} else {
-				continue
-			}
-		} else if err == io.EOF {
-			break
-		}
-
-		line = strings.TrimRight(line, " ")
-		if line == "" {
-	            l.SetPrompt(color.MagentaString("Mode> "))
-		    continue
-		}
-		if line == "m" {
-			return true, nil
-		} else if line == "n" {
-			return false, nil
-		} else {
-			break
-		}
-	}
-	return false, errors.New(color.RedString("Choose between 'm' and 'n'..."))
-}
-
 func scan_desc(message string) (string, error) {
 	var desc string = ""
 	tempFile := "/tmp/pet.tmp"
@@ -110,8 +66,7 @@ func scan_desc(message string) (string, error) {
 	return desc, nil
 }
 
-func scan(message string, is_markdown_mode bool) (string, error) {
-	var markdown_mode bool = is_markdown_mode
+func scan(message string) (string, error) {
 	tempFile := "/tmp/pet.tmp"
 	if runtime.GOOS == "windows" {
 		tempDir := os.Getenv("TEMP")
@@ -149,15 +104,7 @@ func scan(message string, is_markdown_mode bool) (string, error) {
             continue
 		}
 
-        if markdown_mode {
-            if line != "eof" && line != "EOF" {
-            cmds = append(cmds, line)
-            l.SetPrompt(color.YellowString("Command> "))
-            continue
-            }
-        } else {
-            cmds = append(cmds, line)
-        }
+        cmds = append(cmds, line)
 
         var finalCmd string
 
@@ -176,7 +123,6 @@ func new(cmd *cobra.Command, args []string) (err error) {
 	var command string
 	var description string
 	var tags []string
-	var is_markdown_mode bool = false
 
 	var snippets snippet.Snippets
 	if err := snippets.Load(); err != nil {
@@ -207,23 +153,21 @@ func new(cmd *cobra.Command, args []string) (err error) {
 
 		command = strings.Join(cmds, "\n\n")
 	} else {
-		is_markdown_mode, err = scan_mode(color.MagentaString("Mode> "))
-		if err != nil {
-			return err
-		}
-		command, err = scan(color.YellowString("Command> "), is_markdown_mode)
+		command, err = scan(color.YellowString("Command> "))
 		if err != nil {
 			return err
 		}
 	}
+
 	description, err = scan_desc(color.GreenString("Description> "))
+
 	if err != nil {
 		return err
 	}
 
 	if config.Flag.Tag {
 		var t string
-		if t, err = scan(color.CyanString("Tag> "), is_markdown_mode); err != nil {
+		if t, err = scan(color.CyanString("Tag> ")); err != nil {
 			return err
 		}
 		tags = strings.Fields(t)
@@ -240,7 +184,9 @@ func new(cmd *cobra.Command, args []string) (err error) {
 		Command:     command,
 		Tag:         tags,
 	}
+
 	snippets.Snippets = append(snippets.Snippets, newSnippet)
+
 	if err = snippets.Save(); err != nil {
 		return err
 	}
