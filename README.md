@@ -100,10 +100,11 @@ Linux, 粘贴下面的代码到 shell 的 `.rc` 文件。
 pets () {
     # proxychains 是因为我使用 Imgur 保存我的图片
     # 更多关于图片的支持看下文的图片支持章节
+    # ++G 选项默认打开 less 滑动到文末，不需要可以移除
     cmd=`proxychains -q /usr/local/bin/pet search`
     if [[ "$cmd" == "#"* ]]
     then
-        echo "$cmd" | glow -s dark - | less -r
+        echo "$cmd" | glow -s dark - | less -r ++G
         echo "$cmd" | glow -s dark -
     else
         echo "$cmd"
@@ -118,10 +119,11 @@ Windows WSL, 粘贴下面的代码到 shell 的 `.rc` 文件。
 pets () {
     # proxychains 是因为我使用 Imgur 保存我的图片
     # 更多关于图片的支持看下文的图片支持章节
+    # ++G 选项默认打开 less 滑动到文末，不需要可以移除
     cmd=`proxychains -q /usr/local/bin/pet search`
     if [[ "$cmd" == "#"* ]]
     then
-        echo "$cmd" | glow -s dark - | less -r
+        echo "$cmd" | glow -s dark - | less -r ++G
         echo "$cmd" | glow -s dark -
     else
         echo "$cmd"
@@ -140,12 +142,13 @@ if ! pgrep -x "xquartz" >/dev/null; then
 fi
 
 pets () {
-    # proxychains can be removed according to the image service you are using
-    # refer to image support in the below section
+    # proxychains 是因为我使用 Imgur 保存我的图片
+    # 更多关于图片的支持看下文的图片支持章节
+    # ++G 选项默认打开 less 滑动到文末，不需要可以移除
     cmd=`proxychains -q /usr/local/bin/pet search`
     if [[ "$cmd" == "#"* ]]
     then
-        echo "$cmd" | glow -s dark - | less -r
+        echo "$cmd" | glow -s dark - | less -r ++G
         echo "$cmd" | glow -s dark -
     else
         echo "$cmd"
@@ -376,12 +379,13 @@ For Linux, put the following scirpt in whatever shell's `.rc` file.
 
 ```txt
 pets () {
-    # proxychains 是因为我使用 Imgur 保存我的图片
-    # 更多关于图片的支持看下文的图片支持章节
+    # proxychains for whatever reason
+    # refer to image support down below
+    # ++G is to open less and scroll to bottom, remove if not neede
     cmd=`proxychains -q /usr/local/bin/pet search`
     if [[ "$cmd" == "#"* ]]
     then
-        echo "$cmd" | glow -s dark - | less -r
+        echo "$cmd" | glow -s dark - | less -r ++G
         echo "$cmd" | glow -s dark -
     else
         echo "$cmd"
@@ -396,10 +400,11 @@ For Windows WSL, put the following scirpt in whatever shell's `.rc` file.
 pets () {
     # proxychains can be removed according to the image service you are using
     # refer to image support in the below section
+    # ++G is to open less and scroll to bottom, remove if not neede
     cmd=`proxychains -q /usr/local/bin/pet search`
     if [[ "$cmd" == "#"* ]]
     then
-        echo "$cmd" | glow -s dark - | less -r
+        echo "$cmd" | glow -s dark - | less -r ++G
         echo "$cmd" | glow -s dark -
     else
         echo "$cmd"
@@ -420,10 +425,11 @@ fi
 pets () {
     # proxychains can be removed according to the image service you are using
     # refer to image support in the below section
+    # ++G is to open less and scroll to bottom, remove if not neede
     cmd=`proxychains -q /usr/local/bin/pet search`
     if [[ "$cmd" == "#"* ]]
     then
-        echo "$cmd" | glow -s dark - | less -r
+        echo "$cmd" | glow -s dark - | less -r ++G
         echo "$cmd" | glow -s dark -
     else
         echo "$cmd"
